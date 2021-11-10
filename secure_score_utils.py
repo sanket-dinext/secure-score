@@ -6,26 +6,29 @@ import base64
 import logging
 import datetime
 import configparser
+from urllib.parse import urljoin
+import posixpath
 import json
 import os
 from itertools import islice
 
 configParser = configparser.ConfigParser()
-configFilePath = os.path.join('secure-score','credentials.config')
+configFilePath = os.path.join('credentials.config')
 configParser.read(configFilePath)
 
-client_id = configParser.get('API_Auth', 'client_id')
-scope = configParser.get('API_Auth', 'scope')
-grant_type = configParser.get('API_Auth', 'grant_type')
-client_secret = configParser.get('API_Auth','client_secret')
-tenant_id = configParser.get('API_Auth','tenant_id')
-url_token_1 = configParser.get('API_Auth','url_token_1')
-url_token_2 = configParser.get('API_Auth','url_token_2')
+client_id = configParser.get('API_auth', 'client_id')
+scope = configParser.get('API_auth', 'scope')
+grant_type = configParser.get('API_auth', 'grant_type')
+client_secret = configParser.get('API_auth','client_secret')
+tenant_id = configParser.get('API_auth','tenant_id')
+url_token_1 = configParser.get('API_auth','url_token_1')
+url_token_2 = configParser.get('API_auth','url_token_2')
+url_token = url_token_1+"/"+tenant_id+"/"+url_token_2
 
 
 def get_header():
     body = {'client_id': client_id, 'scope': scope, 'grant_type': grant_type, 'client_secret': client_secret}
-    access_token = requests.post(url_token_1, data=body).json()['access_token']
+    access_token = requests.post(url_token, data=body).json()['access_token']
     headers = {"Authorization": "Bearer " + access_token}
     return headers
 
