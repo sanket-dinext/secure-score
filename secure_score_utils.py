@@ -5,20 +5,27 @@ import hmac
 import base64
 import logging
 import datetime
+import configparser
 import json
+import os
 from itertools import islice
 
-client_id = '66b96ed7-1db6-4ff6-8d82-657089782bc6'
-scope = 'https://graph.microsoft.com/.default'
-grant_type = 'client_credentials'
-client_secret = '-eKaz2DStX_E89HFJ.Au3a6r1N9li~_25-'
-tenant_id = '1126248f-0b1d-43e8-a801-d48393b8d061'
-url_token = 'https://login.microsoftonline.com/' + str(tenant_id) + '/oauth2/v2.0/token?'
+configParser = configparser.ConfigParser()
+configFilePath = os.path.join('secure-score','credentials.config')
+configParser.read(configFilePath)
+
+client_id = configParser.get('API_Auth', 'client_id')
+scope = configParser.get('API_Auth', 'scope')
+grant_type = configParser.get('API_Auth', 'grant_type')
+client_secret = configParser.get('API_Auth','client_secret')
+tenant_id = configParser.get('API_Auth','tenant_id')
+url_token_1 = configParser.get('API_Auth','url_token_1')
+url_token_2 = configParser.get('API_Auth','url_token_2')
 
 
 def get_header():
     body = {'client_id': client_id, 'scope': scope, 'grant_type': grant_type, 'client_secret': client_secret}
-    access_token = requests.post(url_token, data=body).json()['access_token']
+    access_token = requests.post(url_token_1, data=body).json()['access_token']
     headers = {"Authorization": "Bearer " + access_token}
     return headers
 
