@@ -6,11 +6,7 @@ import base64
 import logging
 import datetime
 import configparser
-from urllib.parse import urljoin
-import posixpath
-import json
 import os
-from itertools import islice
 
 configParser = configparser.ConfigParser()
 configFilePath = os.path.join('credentials.config')
@@ -47,7 +43,6 @@ def get_secure_profiles():
 def generate_score_profile_dataframe():
     secure_score = get_secure_scores()
     secure_profiles = get_secure_profiles()
-
     secure_score_explode = secure_score.explode('controlScores')
     expanded_secure_score = secure_score_explode.join(pd.json_normalize(secure_score_explode['controlScores']))
     score_profile_joined = expanded_secure_score.merge(secure_profiles, left_on='controlName', right_on='id',
@@ -62,7 +57,6 @@ def generate_score_profile_dataframe():
     return score_profile_joined
 
 
-profile_score = generate_score_profile_dataframe()
 
 
 def build_signature(customer_id, shared_key, date, content_length, method, content_type, resource):

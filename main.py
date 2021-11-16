@@ -4,7 +4,7 @@ import configparser
 import os
 
 configParser = configparser.ConfigParser()
-configFilePath = os.path.join('secure-score','credentials.config')
+configFilePath = os.path.join('credentials.config')
 configParser.read(configFilePath)
 
 profile_score = secure_score_utils.generate_score_profile_dataframe()
